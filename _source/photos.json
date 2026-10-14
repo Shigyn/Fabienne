@@ -1,0 +1,50 @@
+{
+"tartelettes-noisettes": {
+"l": 1536,
+"h": 2048
+},
+"muffins-maison": {
+"l": 1536,
+"h": 2048
+},
+"cakes-sucre-glace": {
+"l": 1536,
+"h": 2048
+},
+"cake-maison": {
+"l": 1600,
+"h": 1200
+},
+"stand-chocolat-chaud": {
+"l": 1536,
+"h": 2048
+},
+"torchon-et-sachets-de-graines": {
+"l": 1536,
+"h": 2048
+},
+"cookies-chocolat": {
+"l": 512,
+"h": 640
+},
+"bouquets-et-graines": {
+"l": 640,
+"h": 640
+},
+"jonquilles-et-tulipes": {
+"l": 361,
+"h": 481
+},
+"etagere-avant-apres": {
+"l": 640,
+"h": 640
+},
+"rideau-sur-mesure": {
+"l": 640,
+"h": 640
+},
+"stand-marche": {
+"l": 349,
+"h": 258
+}
+}
