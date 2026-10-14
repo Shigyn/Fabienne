@@ -39,4 +39,16 @@
   } else {
     aReveler.forEach(function (el) { el.classList.add('vu'); });
   }
+  /* Le rendez-vous epingle : ouvre la fenetre, se masque apres la date. */
+  var epingle = document.querySelector('[data-ouvrir-agenda]');
+  var fenetre = document.querySelector('[data-agenda]');
+  if (epingle && fenetre) {
+    var fin = new Date(epingle.getAttribute('data-fin') + 'T23:59:59');
+    if (new Date() > fin) epingle.hidden = true;
+    epingle.addEventListener('click', function () {
+      if (fenetre.showModal) fenetre.showModal(); else fenetre.setAttribute('open', '');
+    });
+    fenetre.querySelector('[data-fermer-agenda]').addEventListener('click', function () { fenetre.close(); });
+    fenetre.addEventListener('click', function (e) { if (e.target === fenetre) fenetre.close(); });
+  }
 })();

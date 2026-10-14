@@ -13,7 +13,7 @@ const ICI = path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Z]:)
 const PROD = process.env.PROD === '1';
 const URL_SITE = PROD ? 'https://www.lemondedefabienne.fr/' : 'https://shigyn.github.io/Fabienne/';
 const PHOTOS = JSON.parse(fs.readFileSync(path.join(ICI, '_source', 'photos.json'), 'utf8'));
-const V = '1';
+const V = '2';
 
 const E = {
   nom: 'Le Monde de Fabienne',
@@ -57,6 +57,25 @@ const I = {
   // Un brin de feuillage, dessine une fois, repris en ornement.
   brin: '<svg class="brin" viewBox="0 0 120 40" aria-hidden="true"><path d="M4 30C30 26 60 22 116 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><g fill="currentColor"><path d="M22 27c-2-7 2-12 9-13-1 7-4 11-9 13z"/><path d="M26 28c6-4 12-3 16 2-6 3-11 2-16-2z"/><path d="M48 22c-1-8 4-13 11-13-1 7-5 11-11 13z"/><path d="M53 23c6-4 13-3 16 3-7 2-12 1-16-3z"/><path d="M76 16c0-7 5-11 11-11-1 6-5 10-11 11z"/><path d="M80 17c6-3 11-2 14 3-6 2-10 1-14-3z"/><circle cx="110" cy="9" r="3"/></g></svg>',
 };
+
+/* Les prochains rendez-vous. Une seule liste : elle remplit la section
+   « Me trouver » et la fenetre du bouton epingle. `fin` sert a masquer
+   le bouton une fois la date passee, sans reconstruire le site. */
+const EVENEMENTS = [
+  {
+    jour: '25', mois: 'octobre 2026', fin: '2026-10-25',
+    nom: 'Fête de la pomme, du cidre et du fromage',
+    lieu: 'Conches-en-Ouche',
+    texte: 'Douceurs salées (tartes, quiches, cakes salés) et sucrées (cookies, madeleines, cakes aux saveurs d’automne), à accompagner d’un chocolat chaud à l’ancienne.',
+  },
+];
+const agenda = (r, ev, { photo = true } = {}) => `
+      <p class="agenda-eti">Prochain rendez-vous</p>
+      <p class="agenda-date"><b>${ev.jour}</b><span>${ev.mois}</span></p>
+      <h3>${esc(ev.nom)}</h3>
+      <p class="agenda-lieu">${I.pin} ${esc(ev.lieu)}</p>
+      <p>${esc(ev.texte)}</p>
+      ${photo ? `<figure class="agenda-photo">${img(r, 'stand-chocolat-chaud', 'Le stand et sa machine à chocolat chaud', { sizes: '(min-width: 900px) 24vw, 80vw' })}</figure>` : ''}`;
 
 /* ---------------- donnees structurees ---------------- */
 const ENTITE = {
@@ -155,6 +174,17 @@ ${corps(r)}
   </div>
 </footer>
 
+${EVENEMENTS.length ? `<button class="epingle" type="button" data-ouvrir-agenda data-fin="${EVENEMENTS[0].fin}" aria-haspopup="dialog">
+  <span class="epingle-date"><b>${EVENEMENTS[0].jour}</b><small>${EVENEMENTS[0].mois.split(' ')[0].slice(0, 3)}.</small></span>
+  <span class="epingle-texte"><small>Où me trouver prochainement</small><b>${esc(EVENEMENTS[0].lieu)}</b><b class="epingle-court">Où me trouver ?</b></span>
+</button>
+<dialog class="fenetre" data-agenda aria-label="Où me trouver prochainement">
+  <button class="fenetre-fermer" type="button" data-fermer-agenda aria-label="Fermer">×</button>
+  <div class="agenda agenda-fenetre">${agenda(r, EVENEMENTS[0])}
+    <div class="actions"><a class="bouton bouton-rose" href="${WA_BONJOUR}" target="_blank" rel="noopener">${I.wa} Réserver mes douceurs</a></div>
+    <p class="fenetre-suite">Les autres dates sont annoncées sur <a href="${E.facebook}" target="_blank" rel="noopener">Facebook</a> et <a href="${E.instagram}" target="_blank" rel="noopener">Instagram</a>.</p>
+  </div>
+</dialog>` : ''}
 <a class="flottant" href="${WA_BONJOUR}" target="_blank" rel="noopener" aria-label="Commander sur WhatsApp">${I.wa}<span>Commander</span></a>
 
 <script>
@@ -322,13 +352,7 @@ ajouter('', {
       </ul>
       <p>Les prochaines dates sont annoncées sur <a href="${E.facebook}" target="_blank" rel="noopener">Facebook</a> et <a href="${E.instagram}" target="_blank" rel="noopener">Instagram</a>.</p>
     </div>
-    <aside class="agenda reveler" aria-label="Prochain rendez-vous">
-      <p class="agenda-eti">Prochain rendez-vous</p>
-      <p class="agenda-date"><b>25</b><span>octobre 2026</span></p>
-      <h3>Fête de la pomme, du cidre et du fromage</h3>
-      <p class="agenda-lieu">${I.pin} Conches-en-Ouche</p>
-      <p>Douceurs salées (tartes, quiches, cakes salés) et sucrées (cookies, madeleines, cakes aux saveurs d’automne), à accompagner d’un chocolat chaud à l’ancienne.</p>
-      <figure class="agenda-photo">${img(r, 'stand-chocolat-chaud', 'Le stand et sa machine à chocolat chaud', { sizes: '(min-width: 900px) 24vw, 80vw' })}</figure>
+    <aside class="agenda reveler" aria-label="Prochain rendez-vous">${agenda(r, EVENEMENTS[0])}
     </aside>
   </div>
 </section>
